@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install MediaHelm</title>
+<meta name="description" content="How to install MediaHelm — a self-hosted Docker application, pulled and run from the GitHub Container Registry.">
+<style>
+  :root{
+    --bg:#faf8f5; --surface:#ffffff; --border:#e7e0d6;
+    --text:#26221b; --muted:#6f685c; --strong:#1a1712;
+    --accent:#d9600c; --accent-2:#ff8a1e; --accent-soft:#fff3e6;
+    --term-bg:#12161d; --term-text:#e7ecf3; --term-muted:#8a93a0; --term-border:#243040;
+    --radius:14px;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0d1017; --surface:#151a22; --border:#232c38;
+      --text:#e7ecf3; --muted:#9aa3b0; --strong:#f4f7fb;
+      --accent:#ff9d3c; --accent-2:#ffb347; --accent-soft:#241a10;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#faf8f5; --surface:#ffffff; --border:#e7e0d6;
+    --text:#26221b; --muted:#6f685c; --strong:#1a1712;
+    --accent:#d9600c; --accent-2:#ff8a1e; --accent-soft:#fff3e6;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d1017; --surface:#151a22; --border:#232c38;
+    --text:#e7ecf3; --muted:#9aa3b0; --strong:#f4f7fb;
+    --accent:#ff9d3c; --accent-2:#ffb347; --accent-soft:#241a10;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+    line-height:1.62;font-size:17px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:788px;margin:0 auto;padding:0 24px}
+
+  /* header — always dark ink, a brand constant across themes */
+  .top{background:#0d1017;color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand img{height:26px;display:block}
+  .top .tag{font-size:13px;font-weight:600;letter-spacing:.02em;color:#c3cad4}
+  .top .tag b{color:#ff9d3c}
+
+  /* hero */
+  .hero{padding:56px 0 12px}
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-size:clamp(32px,5.5vw,46px);line-height:1.06;letter-spacing:-.02em;margin:0 0 16px;color:var(--strong);text-wrap:balance;font-weight:800}
+  .lede{font-size:19px;color:var(--muted);margin:0 0 8px;max-width:60ch}
+  .lede b{color:var(--text);font-weight:600}
+
+  section{padding:30px 0;border-top:1px solid var(--border)}
+  section:first-of-type{border-top:none}
+  h2{font-size:15px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  h2 .n{color:var(--accent);font-variant-numeric:tabular-nums;margin-right:10px}
+  h3{font-size:22px;letter-spacing:-.01em;color:var(--strong);margin:2px 0 12px;font-weight:700;text-wrap:balance}
+  p{margin:0 0 14px;max-width:66ch}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--surface);border:1px solid var(--border);
+    border-radius:6px;padding:.08em .38em;color:var(--strong)}
+  strong{color:var(--strong)}
+
+  /* terminal / code cards */
+  .term{background:var(--term-bg);border:1px solid var(--term-border);border-radius:var(--radius);
+    overflow:hidden;margin:0 0 14px;box-shadow:0 14px 34px rgba(8,12,20,.16)}
+  .term .bar{display:flex;align-items:center;gap:8px;padding:11px 15px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+  .term .label{margin-left:8px;font-family:var(--mono);font-size:12px;color:var(--term-muted)}
+  .term .copy{margin-left:auto;background:rgba(255,255,255,.07);color:#cdd5df;border:1px solid rgba(255,255,255,.12);
+    font:inherit;font-size:12px;font-weight:600;padding:5px 12px;border-radius:7px;cursor:pointer}
+  .term .copy:hover{background:rgba(255,255,255,.14);color:#fff}
+  .term .copy.done{color:#7fe08a;border-color:rgba(127,224,138,.4)}
+  .term pre{margin:0;padding:16px 18px;overflow-x:auto}
+  .term code{font-family:var(--mono);font-size:14px;line-height:1.7;color:var(--term-text);
+    background:none;border:none;padding:0;white-space:pre;display:block}
+  .term .cmt{color:var(--term-muted)}
+  .term .pmt{color:#ff9d3c}
+  .term .flag{color:#8ec7ff}
+
+  .callout{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));
+    border-radius:12px;padding:15px 18px;margin:0 0 14px}
+  .callout p{margin:0;font-size:15px;color:var(--text)}
+  .callout p+p{margin-top:8px}
+  .callout .h{font-weight:700;color:var(--strong)}
+
+  .ref{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:baseline;background:var(--surface);
+    border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+  .ref .k{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .ref .v{font-family:var(--mono);font-size:15px;color:var(--strong);word-break:break-all}
+
+  ul.links{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  ul.links li{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 16px}
+  ul.links .l-k{font-weight:600;color:var(--strong)}
+  ul.links .l-d{font-size:14px;color:var(--muted);margin-top:2px}
+  ul.links a{word-break:break-all}
+
+  .foot{border-top:1px solid var(--border);margin-top:8px;padding:26px 0 48px;color:var(--muted);font-size:14px}
+  .foot a{color:var(--muted)}
+  .theme-toggle{background:none;border:1px solid rgba(255,255,255,.18);color:#cdd5df;border-radius:8px;
+    width:34px;height:30px;cursor:pointer;font-size:14px;line-height:1}
+  .theme-toggle:hover{background:rgba(255,255,255,.1)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  @media (max-width:560px){body{font-size:16px}.hero{padding:38px 0 8px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="https://github.com/MunerisUK/mediahelm" aria-label="MediaHelm">
+      <img alt="MediaHelm" src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzAwIDcyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iTWVkaWFIZWxtIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ibWgtZyIgeDE9IjIiIHkxPSIyIiB4Mj0iMzAiIHkyPSIzMCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjZmY3YTE4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmYjM0NyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOCwxMikgc2NhbGUoMS41KSI+CiAgICA8cmVjdCB4PSIzIiB5PSI2IiB3aWR0aD0iMjYiIGhlaWdodD0iMjAiIHJ4PSI1IiBmaWxsPSIjMTExNTFjIiBzdHJva2U9InVybCgjbWgtZykiIHN0cm9rZS13aWR0aD0iMi4yIi8+CiAgICA8cGF0aCBkPSJNMTMuNSAxMi4yIEwyMSAxNiBMMTMuNSAxOS44IFoiIGZpbGw9InVybCgjbWgtZykiLz4KICAgIDxwYXRoIGQ9Ik0yNC40IDExLjYgYTYgNiAwIDAgMSAwIDguOCIgc3Ryb2tlPSJ1cmwoI21oLWcpIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPC9nPgogIDx0ZXh0IHg9Ijc0IiB5PSI0NiIgZm9udC1mYW1pbHk9Ii1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LFNlZ29lIFVJLFJvYm90byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzMCIgZm9udC13ZWlnaHQ9IjgwMCIgbGV0dGVyLXNwYWNpbmc9Ii0wLjMiIGZpbGw9IiNmZmZmZmYiPk1lZGlhPHRzcGFuIGZpbGw9IiNmZjdhMTgiPkhlbG08L3RzcGFuPjwvdGV4dD4KPC9zdmc+Cg==">
+    </a>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="tag">Install guide · <b>Docker</b></span>
+      <button class="theme-toggle" id="tt" title="Toggle theme" aria-label="Toggle light/dark theme">◑</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <p class="eyebrow">Self-hosted · one container</p>
+    <h1>Install MediaHelm</h1>
+    <p class="lede">MediaHelm is a <b>Docker application</b>. There's no installer to download and
+      no click-to-download link — you run it as a container on your own server or NAS, then open it
+      in a browser. Here's the whole process.</p>
+  </div>
+
+  <section>
+    <h2><span class="n">01</span>How Docker install works</h2>
+    <p>MediaHelm is published as a container image to the <strong>GitHub Container Registry (GHCR)</strong>.
+      You don't download a file — Docker <strong>pulls</strong> the image and <strong>runs</strong> it. You
+      need Docker on the host first (Docker Desktop on Windows/macOS, or Docker Engine on Linux and most NAS
+      systems). Everything below is a single command you can paste into a terminal.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">02</span>The install reference</h2>
+    <p>In Docker terms, this image reference is the "download link" — you give it to Docker, not to a browser:</p>
+    <div class="ref">
+      <span class="k">Image</span>
+      <span class="v">ghcr.io/munerisuk/mediahelm:latest</span>
+    </div>
+    <p><code>:latest</code> always resolves to the newest release. To pin a version, swap it for a tag such as
+      <code>ghcr.io/munerisuk/mediahelm:0.2.0</code>.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">03</span>Standard install</h2>
+    <p>Publishes the dashboard on port <strong>5005</strong> and keeps your data in a named volume that
+      survives updates and restarts:</p>
+    <div class="term">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="label">bash</span><button class="copy">Copy</button></div>
+<pre><code><span class="pmt">$</span> docker run -d --name mediahelm --restart unless-stopped \
+    <span class="flag">-p</span> 5005:5005 \
+    <span class="flag">-v</span> mediahelm-data:/data \
+    ghcr.io/munerisuk/mediahelm:latest</code></pre>
+    </div>
+    <p>Then open <code>http://&lt;host-ip&gt;:5005</code> (locally, usually
+      <a href="http://localhost:5005">http://localhost:5005</a>) and follow the guided setup.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">04</span>Host networking (optional)</h2>
+    <div class="callout">
+      <p><span class="h">Use this if you want auto-discovery.</span> For Plex / Emby / Jellyfin to
+        <strong>automatically find MediaHelm as an HDHomeRun tuner</strong>, it needs a local-network
+        broadcast (UDP 65001) that standard bridge networking blocks. Host networking passes it through.
+        Otherwise the standard install is fine — you'd just add the tuner by URL manually.</p>
+    </div>
+    <div class="term">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="label">bash</span><button class="copy">Copy</button></div>
+<pre><code><span class="pmt">$</span> docker run -d --name mediahelm --restart unless-stopped \
+    <span class="flag">--network</span> host \
+    <span class="flag">-v</span> mediahelm-data:/data \
+    ghcr.io/munerisuk/mediahelm:latest</code></pre>
+    </div>
+    <p>With <code>--network host</code> you don't pass <code>-p</code> — MediaHelm uses the host's network
+      directly and still listens on port <strong>5005</strong>.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">05</span>Docker Compose</h2>
+    <p>Prefer a file you can version and re-run? Save this as <code>docker-compose.yml</code> and run
+      <code>docker compose up -d</code>:</p>
+    <div class="term">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="label">docker-compose.yml</span><button class="copy">Copy</button></div>
+<pre><code>services:
+  mediahelm:
+    image: ghcr.io/munerisuk/mediahelm:latest
+    container_name: mediahelm
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+    volumes:
+      - mediahelm-data:/data
+    <span class="cmt"># For HDHomeRun auto-discovery (UDP 65001), remove the</span>
+    <span class="cmt"># "ports" block above and use host networking instead:</span>
+    <span class="cmt"># network_mode: host</span>
+
+volumes:
+  mediahelm-data:</code></pre>
+    </div>
+    <p>Use <strong>either</strong> the port mapping <strong>or</strong> host networking — not both.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">06</span>Package &amp; source</h2>
+    <ul class="links">
+      <li>
+        <div class="l-k"><a href="https://github.com/orgs/MunerisUK/packages/container/package/mediahelm">Container package (GHCR)</a></div>
+        <div class="l-d">The version-browsing page — published tags, pull count and the exact image reference. The closest thing to a web "download page" for the image.</div>
+      </li>
+      <li>
+        <div class="l-k"><a href="https://github.com/MunerisUK/mediahelm-docs">Documentation</a></div>
+        <div class="l-d">Setup, configuration, updates and troubleshooting.</div>
+      </li>
+      <li>
+        <div class="l-k"><a href="https://github.com/MunerisUK/mediahelm">Source repository</a></div>
+        <div class="l-d">The code — for reference and issues. Not a customer download link.</div>
+      </li>
+    </ul>
+    <div class="callout" style="margin-top:14px">
+      <p>If the package is <span class="h">public</span>, pull it directly — no login. If it's
+        <span class="h">private</span>, sign in to the registry first with
+        <code>docker login ghcr.io</code> (a GitHub username + a token with <code>read:packages</code>).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">07</span>"What's the download link?"</h2>
+    <p>There isn't one in the usual sense — MediaHelm installs as a Docker container, not a downloaded
+      installer. The image reference <em>is</em> the install link:</p>
+    <div class="ref"><span class="k">Pull</span><span class="v">ghcr.io/munerisuk/mediahelm:latest</span></div>
+    <p>Run the <a href="#" onclick="document.querySelectorAll('section')[2].scrollIntoView();return false;">standard
+      install command</a> above, then open <code>http://&lt;your-server&gt;:5005</code>.</p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    MediaHelm is a Muneris Management product · supplies no media, channels or streams — all sources are your own.
+    · <a href="https://github.com/MunerisUK/mediahelm/blob/main/ACCEPTABLE_USE.md">Acceptable Use</a>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle: stamp data-theme so it wins over prefers-color-scheme both ways.
+  (function(){
+    var tt=document.getElementById('tt');
+    tt.addEventListener('click',function(){
+      var cur=document.documentElement.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      document.documentElement.setAttribute('data-theme',cur==='dark'?'light':'dark');
+    });
+  })();
+  // Copy buttons — copy the command text of the sibling <pre>.
+  document.querySelectorAll('.term .copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var pre=btn.closest('.term').querySelector('pre');
+      var text=pre.innerText.replace(/^\$\s?/gm,'');
+      navigator.clipboard.writeText(text).then(function(){
+        btn.textContent='Copied'; btn.classList.add('done');
+        setTimeout(function(){btn.textContent='Copy';btn.classList.remove('done');},1600);
+      });
+    });
+  });
+</script>
+</body>
+</html>
