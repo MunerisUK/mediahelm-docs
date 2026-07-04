@@ -5,7 +5,7 @@
 **Your Plex command center — and a full Live TV control plane — in one
 self-hosted app.**
 
-MediaHelm sits beside Plex (and Emby/Jellyfin) and gives you the cockpit they
+MediaHelm http://ghcr.io/munerisuk/mediahelm:sha-1f06c70 sits beside Plex (and Emby/Jellyfin) and gives you the cockpit they
 never shipped: see who's watching, fix *"why won't this play?"*, manage IPTV
 channels, and run live TV through your media server — all from one clean, fast
 dashboard you own. It doesn't replace Plex; it makes running it effortless.
