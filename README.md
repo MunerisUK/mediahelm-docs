@@ -101,46 +101,47 @@ TV channels, Tunaar does exactly that: one Docker container, real tuner slots,
 ffmpeg remuxing so streams don't drop, automatic EPG merging and channel
 auto-discovery. It's lean, focused and quick to stand up.
 
-**MediaHelm is the all-in-one media-server companion.** It includes the same kind
-of IPTV/HDHomeRun tuner module, but that's one part of a much wider tool: it's
-really there to *run and troubleshoot your whole server* — stream and bandwidth
-monitoring, playback diagnostics, one-click metadata/poster rollback, a user
-problem-report portal with triage, and multi-server support across
-Plex/Jellyfin/Emby.
+**MediaHelm Standard** is the natural step up from Tunaar: the full IPTV tuner,
+guide and streaming — *plus* the everyday tools to run a household server (admin &
+user management, playback diagnostics, stream/bandwidth monitoring, one-click
+metadata rollback, a user problem-report portal, notifications and multi-source
+stream failover). **MediaHelm Pro** adds the power-user and scale features on top:
+multi-server management, automated monitoring & alerts, offline downloads,
+rollback history and API access.
 
 At a glance:
 
-| Capability | Tunaar | MediaHelm |
-|------------|:------:|:---------:|
-| IPTV M3U → Plex/Emby/Jellyfin (HDHomeRun tuner) | ✓ | ✓ |
-| Real tuner slots (concurrency cap + release) | ✓ | ✓ |
-| Reliable streaming (ffmpeg remux / proxy) | ✓ | ✓ |
-| EPG auto-detect & merge | ✓ | ✓ |
-| Merge multiple IPTV sources, collision-free numbering | ✓ | ✓ |
-| Channel-group control | ✓ | ✓ |
-| Tuner auto-discovery (UDP 65001) | ✓ | ✓ |
-| Web dashboard + live activity logs | ✓ | ✓ |
-| Stream failover between sources | — | ✓ |
-| Server admin & user management | — | ✓ |
-| Stream / bandwidth monitoring | — | ✓ |
-| Playback diagnostics | — | ✓ |
-| One-click metadata / poster rollback | — | ✓ |
-| User problem-report portal + triage | — | ✓ |
-| Notifications (email / Discord / Telegram) | — | ✓ |
-| Multi-server (Plex + Jellyfin + Emby together) | — | ✓ |
+| Capability | Tunaar | MediaHelm Standard | MediaHelm Pro |
+|---|---:|---:|---:|
+| IPTV M3U → Plex/Emby/Jellyfin (HDHomeRun tuner) | ✓ | ✓ | ✓ |
+| Real tuner slots (concurrency cap + release) | ✓ | ✓ | ✓ |
+| Reliable streaming (ffmpeg remux / proxy) | ✓ | ✓ | ✓ |
+| EPG auto-detect & merge | ✓ | ✓ | ✓ |
+| Merge multiple IPTV sources, collision-free numbering | ✓ | ✓ | ✓ |
+| Channel-group control | ✓ | ✓ | ✓ |
+| Tuner auto-discovery (UDP 65001) | ✓ | ✓ | ✓ |
+| Web dashboard + live activity logs | ✓ | ✓ | ✓ |
+| Server admin & user management | — | ✓ | ✓ |
+| Playback diagnostics (*"why won't this play?"*) | — | ✓ | ✓ |
+| Stream / bandwidth monitoring | — | ✓ | ✓ |
+| One-click metadata / poster rollback | — | ✓ | ✓ |
+| User problem-report portal + triage | — | ✓ | ✓ |
+| Notifications (email / Discord / Telegram) | — | ✓ | ✓ |
+| Stream failover between sources | — | ✓ | ✓ |
+| Multi-server (Plex + Jellyfin + Emby together) | — | — | ✓ |
+| Automated monitoring & alerts | — | — | ✓ |
+| Offline downloads (export your own library) | — | — | ✓ |
+| Metadata rollback history | — | — | ✓ |
+| API access / webhooks | — | — | ✓ |
 
-(Tunaar focuses entirely on doing the IPTV rows well; the lower rows are
-MediaHelm's broader media-server remit.)
+> **The complete IPTV/Live TV tuner is in every MediaHelm tier** (the top eight
+> rows) — never feature-gated behind a higher tier. MediaHelm has no free tier: a
+> Standard or Pro licence/trial is required to run it. The cheap IPTV-only option
+> is the separate Tunaar product.
 
-> **The complete Tunaar feature set is included in every MediaHelm tier** — the
-> entire IPTV/Live TV tuner (M3U/EPG, HDHomeRun emulation + discovery, tuner
-> slots, ffmpeg streaming, group control, admin console) is never feature-gated
-> behind a higher tier. (MediaHelm itself has no free tier: a Standard or Pro
-> licence/trial is required to run it. The cheap IPTV-only option is the separate
-> Tunaar product.) Higher tiers only *add* features on top.
-
-Rule of thumb: **choose Tunaar if you want IPTV and little else; choose MediaHelm
-if you want a control panel for your entire media server** (with IPTV included).
+Rule of thumb: **Tunaar** if you just want IPTV → Live TV; **MediaHelm Standard**
+if you also want to run and troubleshoot one server; **MediaHelm Pro** if you run
+several, want automation, offline downloads or the API.
 
 For current plans and pricing, see the in-app **License** page.
 
