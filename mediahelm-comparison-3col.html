@@ -1,0 +1,87 @@
+<!-- MediaHelm comparison — Tunaar vs MediaHelm Standard vs MediaHelm Pro.
+     Drop this <section> into the docs site (mediahelm-docs). Self-contained styles;
+     rename the class prefix if it clashes. British English. No pricing baked in. -->
+<section class="mh-compare">
+  <h2>Tunaar, MediaHelm Standard or MediaHelm Pro?</h2>
+  <p class="mh-compare-lede">
+    <strong>Tunaar</strong> is the lightweight IPTV-to-Plex/Emby/Jellyfin tuner.
+    <strong>MediaHelm Standard</strong> is the step up: the full tuner <em>plus</em>
+    the everyday tools to run a household server — admin &amp; users, playback
+    diagnostics, monitoring, metadata rollback, a problem-report portal and
+    notifications. <strong>MediaHelm Pro</strong> adds the power-user, reliability
+    and scale features on top: stream failover, multi-server management, automated
+    monitoring &amp; alerts, offline downloads, rollback history and API access.
+  </p>
+
+  <div class="mh-compare-scroll">
+    <table class="mh-compare-table">
+      <thead>
+        <tr>
+          <th scope="col">Capability</th>
+          <th scope="col">Tunaar</th>
+          <th scope="col">MediaHelm Standard</th>
+          <th scope="col" class="mh-pro">MediaHelm Pro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>IPTV M3U → Plex/Emby/Jellyfin (HDHomeRun tuner)</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Real tuner slots (concurrency cap + release)</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Reliable streaming (ffmpeg remux / proxy)</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>EPG auto-detect &amp; merge</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Merge multiple IPTV sources, collision-free numbering</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Channel-group control</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Tuner auto-discovery (UDP 65001)</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Web dashboard + live activity logs</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Server admin &amp; user management</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Playback diagnostics (“why won’t this play?”)</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Stream / bandwidth monitoring</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>One-click metadata / poster rollback</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>User problem-report portal + triage</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Notifications (email / Discord / Telegram)</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+        <tr><td>Stream failover between sources</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+        <tr><td>Multi-server (Plex + Jellyfin + Emby together)</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+        <tr><td>Automated monitoring &amp; alerts</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+        <tr><td>Offline downloads (export your own library)</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+        <tr><td>Metadata rollback history</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+        <tr><td>API access / webhooks</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="mh-compare-note">
+    The complete IPTV/Live TV tuner is in every MediaHelm tier — the top eight rows
+    are shared. MediaHelm has no free tier; the cheap IPTV-only option is the
+    separate Tunaar product.
+  </p>
+</section>
+
+<style>
+  .mh-compare{max-width:960px;margin:0 auto;padding:8px 0 24px;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1c1733}
+  .mh-compare h2{font-size:26px;font-weight:800;margin:0 0 10px}
+  .mh-compare-lede{color:#4a4560;font-size:16px;line-height:1.6;margin:0 0 20px}
+  .mh-compare-scroll{overflow-x:auto}
+  .mh-compare-table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:600px}
+  .mh-compare-table th,.mh-compare-table td{padding:11px 14px;border-bottom:1px solid #eae6f2;text-align:center}
+  .mh-compare-table th:first-child,.mh-compare-table td:first-child{text-align:left;color:#1c1733}
+  .mh-compare-table thead th{font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:#6b6482;border-bottom:2px solid #e2dcf0}
+  .mh-compare-table th.mh-pro{color:#b35309}
+  .mh-compare-table td.y{color:#1a8f43;font-weight:700}
+  .mh-compare-table td.n{color:#b9b3c6}
+  .mh-compare-table tbody tr:hover{background:#faf8ff}
+  .mh-compare-table td:last-child,.mh-compare-table th:last-child{background:#fff6ec}
+  .mh-compare-note{color:#6b6482;font-size:13.5px;margin:16px 0 0;line-height:1.55}
+  @media (prefers-color-scheme:dark){
+    .mh-compare{color:#e7ecf3}
+    .mh-compare-lede{color:#b6bdc9}
+    .mh-compare-table th,.mh-compare-table td{border-bottom-color:#232c38}
+    .mh-compare-table thead th{color:#9aa3b0;border-bottom-color:#2b3542}
+    .mh-compare-table th:first-child,.mh-compare-table td:first-child{color:#e7ecf3}
+    .mh-compare-table th.mh-pro{color:#ff9d3c}
+    .mh-compare-table td.y{color:#4ccf74}
+    .mh-compare-table td.n{color:#5a6472}
+    .mh-compare-table tbody tr:hover{background:#171d26}
+    .mh-compare-table td:last-child,.mh-compare-table th:last-child{background:#1c1408}
+    .mh-compare-note{color:#9aa3b0}
+  }
+</style>
