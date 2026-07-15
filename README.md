@@ -90,18 +90,19 @@ duty and point Plex at it, while using MediaHelm for day-to-day Plex
 administration and diagnostics. Pick the tool whose focus matches yours — or use
 both.
 
-### Tunaar or MediaHelm — which fits?
+### MediaHelm Live-TV or MediaHelm — which fits?
 
 Both are ours and built for different jobs, so this isn't a better/worse call —
 it's about what you want to run.
 
-**[Tunaar](https://github.com/MCHammer65/Tunaar) is the IPTV specialist.** If all
-you need is to get IPTV M3U playlists into Plex, Emby or Jellyfin as reliable Live
-TV channels, Tunaar does exactly that: one Docker container, real tuner slots,
-ffmpeg remuxing so streams don't drop, automatic EPG merging and channel
-auto-discovery. It's lean, focused and quick to stand up.
+**[MediaHelm Live-TV](https://github.com/MunerisUK/mediahelm-live-docs) is the
+IPTV specialist.** If all you need is to get IPTV M3U playlists into Plex, Emby or
+Jellyfin as reliable Live TV channels, MediaHelm Live-TV does exactly that: one
+Docker container, real tuner slots, ffmpeg remuxing so streams don't drop,
+automatic EPG merging and channel auto-discovery. It's lean, focused and quick to
+stand up.
 
-**MediaHelm Standard** is the natural step up from Tunaar: the full IPTV tuner,
+**MediaHelm Standard** is the natural step up from Live-TV: the full IPTV tuner,
 guide and streaming — *plus* the everyday tools to run a household server (admin &
 user management, playback diagnostics, stream/bandwidth monitoring, one-click
 metadata rollback, a user problem-report portal, notifications and multi-source
@@ -111,7 +112,7 @@ rollback history and API access.
 
 At a glance:
 
-| Capability | Tunaar | MediaHelm Standard | MediaHelm Pro |
+| Capability | MediaHelm Live-TV | MediaHelm Standard | MediaHelm Pro |
 |---|---:|---:|---:|
 | IPTV M3U → Plex/Emby/Jellyfin (HDHomeRun tuner) | ✓ | ✓ | ✓ |
 | Real tuner slots (concurrency cap + release) | ✓ | ✓ | ✓ |
@@ -137,11 +138,11 @@ At a glance:
 > **The complete IPTV/Live TV tuner is in every MediaHelm tier** (the top eight
 > rows) — never feature-gated behind a higher tier. MediaHelm has no free tier: a
 > Standard or Pro licence/trial is required to run it. The cheap IPTV-only option
-> is the separate Tunaar product.
+> is the separate MediaHelm Live-TV product.
 
-Rule of thumb: **Tunaar** if you just want IPTV → Live TV; **MediaHelm Standard**
-if you also want to run and troubleshoot one server; **MediaHelm Pro** if you run
-several, want automation, offline downloads or the API.
+Rule of thumb: **MediaHelm Live-TV** if you just want IPTV → Live TV; **MediaHelm
+Standard** if you also want to run and troubleshoot one server; **MediaHelm Pro**
+if you run several, want automation, offline downloads or the API.
 
 For current plans and pricing, see the in-app **License** page.
 
@@ -192,14 +193,14 @@ sources and your media server, and appears to Plex/Emby/Jellyfin as an
 | **Auto-refresh** | Background scheduler re-imports playlists & EPG on a per-source interval. |
 | **Stream failover** | Multiple sources per channel (auto-merged by `tvg-id` across providers); the proxy fails over if one drops. |
 | **Auto-reconnect** | The proxy restarts an upstream that drops mid-watch (EOF / token rotation / blip) so the player never sees the gap; capped retries stop a dead channel hot-looping. |
-| **VPN support** | Route all IPTV egress through a VPN (see `docker-compose.vpn.yml`). |
+| **VPN support** | Route all IPTV egress through a VPN (Gluetun sidecar — overlay available on request). |
 
 **Connect Plex:** Settings → Live TV & DVR → *Set up Plex DVR* → enter
 `http://<host>:5005` as the HDHomeRun device, then point the guide at
 `http://<host>:5005/epg.xml`.
 
-**VPN:** `docker compose -f docker-compose.yml -f docker-compose.vpn.yml up -d`
-routes all egress through a Gluetun container.
+**VPN:** all IPTV egress can be routed through a Gluetun container via a compose
+overlay — ask support for the ready-made overlay file.
 
 > **Status:** the playlist/EPG parsing, channel management, HDHomeRun lineup,
 > XMLTV output and the passthrough proxy with live monitoring are implemented and
@@ -235,11 +236,10 @@ docker run -d --name mediahelm -p 5005:5005 -v ./data:/data \
   ghcr.io/munerisuk/mediahelm:latest
 ```
 
-Or build from source with compose:
+Or with Docker Compose — download [`compose.yaml`](compose.yaml) (it uses the
+published image, no build needed):
 
 ```bash
-git clone https://github.com/MunerisUK/mediahelm.git && cd mediahelm
-cp .env.example .env          # optional — a secret is generated on first run
 docker compose up -d
 ```
 
@@ -255,34 +255,21 @@ Port `5005` is safe on a typical Plex host (Plex itself uses `32400`); its only
 common conventional use is Java remote debugging (JDWP).
 
 ### NAS notes
-- **QNAP** (one-line deploy over SSH — Container Station required):
+- **QNAP** (Container Station): add a container from the image
+  `ghcr.io/munerisuk/mediahelm:latest`, map a volume to `/data`, and publish
+  `5005`. Or over SSH with Container Station's Docker:
   ```bash
-  ssh admin@<qnap-ip>
-  git clone https://github.com/MunerisUK/mediahelm.git
-  cd mediahelm
-  sh deploy/qnap-deploy.sh            # add -p 9000 to pick a host port
+  docker run -d --name mediahelm --restart unless-stopped \
+    -p 5005:5005 -v /share/Container/mediahelm:/data \
+    ghcr.io/munerisuk/mediahelm:latest
   ```
-  The script finds Container Station's Docker/Compose, generates a secret key,
-  writes `.env`, builds, launches, and prints the URL. Re-run with `-u` to
-  update (git pull + rebuild). See [`deploy/qnap-deploy.sh`](deploy/qnap-deploy.sh)
-  (`-h` for all options).
-- **Synology**: use Container Manager and import `docker-compose.yml`, or run
-  the image directly mapping a volume to `/data` and publishing `<your-port>:5005`.
-- **Unraid**: install via the included **Community Applications template**
-  ([`deploy/unraid/mediahelm.xml`](deploy/unraid/mediahelm.xml)) — maps `/data`,
-  publishes `5005`, and exposes the key env vars. For HDHomeRun auto-discovery,
-  set the container's Network Type to **Host**.
-
----
-
-## Run locally (without Docker)
-
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-export MEDIAHELM_SECRET_KEY=dev-secret
-uvicorn app.main:app --reload --port 5005
-```
+- **Synology**: use Container Manager — import [`compose.yaml`](compose.yaml), or
+  add the image directly mapping a volume to `/data` and publishing
+  `<your-port>:5005`.
+- **Unraid**: install via the **Community Applications template**
+  ([`unraid-mediahelm.xml`](unraid-mediahelm.xml)) — maps `/data`, publishes
+  `5005`, and exposes the key env vars. For HDHomeRun auto-discovery, set the
+  container's Network Type to **Host**.
 
 ---
 
@@ -337,12 +324,12 @@ full-screen like a native app (manifest + Apple touch icons included).
 
 ### Design language
 
-MediaHelm follows the **[Tunaar](https://github.com/MCHammer65/Tunaar) design
-philosophy — "robust and effortless / just works."** A dark-first UI with a
-light-theme toggle, Tunaar's signature orange gradient accent
+MediaHelm follows a **"robust and effortless / just works"** design philosophy: a
+dark-first UI with a light-theme toggle, the signature orange gradient accent
 (`#ff7a18 → #ffb347`), a radial background glow, a sticky topbar header with
-horizontal nav, and clean bordered panels. The colour tokens mirror Tunaar's
-own `style.css`, so MediaHelm sits visually alongside it in a homelab stack.
+horizontal nav, and clean bordered panels. It shares this design language with
+**MediaHelm Live-TV**, so the two sit visually alongside each other in a homelab
+stack.
 
 ---
 
@@ -431,8 +418,8 @@ with no active licence is *unlicensed*: it is **nagged for 14 days, then the
 admin app soft-locks** — the dashboard and companion features redirect to the
 License page, but **already-configured players keep streaming** (the tuner, guide,
 M3U and stream proxy stay live) so a household isn't cut off mid-show. The cheap
-**IPTV-only** option is the separate **Tunaar** product (£16.99/yr or £49.99
-lifetime), not a free MediaHelm tier. Note: within MediaHelm the IPTV tuner is
+**IPTV-only** option is the separate **MediaHelm Live-TV** product (£16.99/yr or
+£49.99 lifetime), not a free MediaHelm tier. Note: within MediaHelm the IPTV tuner is
 never *feature-gated* behind a higher tier — Standard and Pro both include it.
 
 Two paid tiers, billed **annually** (no lifetime — the app tracks evolving
@@ -466,16 +453,37 @@ Vendor setup:
 1. In Lemon Squeezy, enable **License keys** on your Standard and Pro product
    variants (Lemon Squeezy emails the key to the buyer automatically on
    purchase).
-2. Copy each **Variant ID** into the variant settings so a validated key
-   resolves to the right tier, and paste the hosted **checkout URLs** to show
-   "Buy" buttons on the License page. Note the internal setting keys are
-   historical, so **`…_VARIANT_PRO` / `…_CHECKOUT_PRO` = Standard** and
-   **`…_VARIANT_POWER` / `…_CHECKOUT_POWER` = Pro**.
+2. Copy each **Variant ID** into the matching environment variable so a
+   validated key resolves to the right tier, and paste the hosted **checkout
+   URLs** to show "Buy" buttons on the License page. The internal setting keys
+   are historical, so **`…_PRO` = Standard** and **`…_POWER` = Pro**:
+
+   | Environment variable | Set to |
+   | --- | --- |
+   | `MEDIAHELM_LEMONSQUEEZY_VARIANT_PRO` | **Standard** product's Variant ID |
+   | `MEDIAHELM_LEMONSQUEEZY_VARIANT_POWER` | **Pro** product's Variant ID |
+   | `MEDIAHELM_LEMONSQUEEZY_CHECKOUT_PRO` | **Standard** hosted checkout URL |
+   | `MEDIAHELM_LEMONSQUEEZY_CHECKOUT_POWER` | **Pro** hosted checkout URL |
+   | `MEDIAHELM_LEMONSQUEEZY_CHECKOUT_TRIAL` | Free-trial checkout URL |
+
+   Find a Variant ID in Lemon Squeezy under **Products → your product → the
+   variant** (or in any API/webhook payload as `variant_id`).
+
+   > ⚠️ **Set the variant IDs — don't rely on the name fallback.** These IDs are
+   > the authoritative tier mapping. If `…_VARIANT_POWER` is unset (or wrong), a
+   > validated key falls back to inferring the tier from the product *name*, and
+   > a **Pro** purchase can end up unlocking only **Standard**. Setting both IDs
+   > removes the guesswork.
 3. (Optional) Set per-variant **activation limits** in Lemon Squeezy to cap how
    many installs one key can run on.
 
 That's it — no private signing key, webhook endpoint or SMTP needed for
 delivery.
+
+> If a customer activated **before** the variant IDs were set correctly, their
+> cached tier can be stale for up to a week (licences re-validate at most
+> weekly). Have them **Remove license** then **Activate** again in
+> **Settings → License** to pick up the corrected tier immediately.
 
 How activation works for the customer:
 

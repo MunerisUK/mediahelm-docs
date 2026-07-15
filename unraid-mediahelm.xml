@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+  Unraid Community Applications template for MediaHelm.
+  Install: Unraid → Docker → Add Container → Template: paste this file's raw URL,
+  or drop it in /boot/config/plugins/dockerMan/templates-user/ and pick it.
+
+  Note: HDHomeRun auto-discovery (UDP 65001) needs host networking. For
+  auto-discovery set Network Type to "Host"; otherwise add the tuner URL shown
+  on the Live TV page manually in Plex/Emby/Jellyfin.
+-->
+<Container version="2">
+  <Name>MediaHelm</Name>
+  <Repository>ghcr.io/munerisuk/mediahelm:latest</Repository>
+  <Registry>https://github.com/orgs/MunerisUK/packages/container/package/mediahelm</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/MunerisUK/mediahelm-docs</Support>
+  <Project>https://github.com/MunerisUK/mediahelm-docs</Project>
+  <Overview>MediaHelm — a Plex/Jellyfin/Emby admin &amp; diagnostics companion with a built-in IPTV stream manager that appears as an HDHomeRun tuner. Live streams dashboard, "why won't this play?" diagnostics, metadata rollback (Plex), issue portal + Kanban, M3U/EPG import, shared-upstream proxy, and notifications.</Overview>
+  <Category>MediaApp:Video MediaServer:Video Network:Other</Category>
+  <WebUI>http://[IP]:[PORT:5005]/</WebUI>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/MunerisUK/mediahelm-docs/main/icon-192.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <DonateText/>
+  <DonateLink/>
+  <Description>Self-hosted control plane for Plex, Jellyfin and Emby — plus an IPTV-to-LiveTV proxy. A secret is generated on first run; persist /data to keep it. For HDHomeRun auto-discovery, switch Network Type to Host.</Description>
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish>
+      <Port>
+        <HostPort>5005</HostPort>
+        <ContainerPort>5005</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+    </Publish>
+  </Networking>
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/mediahelm</HostDir>
+      <ContainerDir>/data</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
+  <Config Name="WebUI Port" Target="5005" Default="5005" Mode="tcp" Description="Port for the MediaHelm web UI" Type="Port" Display="always" Required="true" Mask="false">5005</Config>
+  <Config Name="App Data" Target="/data" Default="/mnt/user/appdata/mediahelm" Mode="rw" Description="Persistent data: database, metadata snapshots, generated secret" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/mediahelm</Config>
+  <Config Name="Advertised URL" Target="MEDIAHELM_ADVERTISED_URL" Default="" Description="External base URL advertised to media servers for HDHomeRun discovery (e.g. http://192.168.1.50:5005). Leave blank to auto-detect." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Tuner Count" Target="MEDIAHELM_TUNER_COUNT" Default="4" Description="Max distinct IPTV channels streamed at once" Type="Variable" Display="advanced" Required="false" Mask="false">4</Config>
+  <Config Name="Secure Cookies" Target="MEDIAHELM_SECURE_COOKIES" Default="false" Description="Set true if serving over HTTPS (marks cookies Secure)" Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+</Container>
